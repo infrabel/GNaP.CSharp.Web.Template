@@ -134,7 +134,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>1993</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:1993/</IISUrl>
+          <IISUrl>http://localhost:1996/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

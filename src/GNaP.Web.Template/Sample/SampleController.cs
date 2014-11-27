@@ -4,7 +4,7 @@
     using System.Web.Http;
     using Versioning.WebAPI;
 
-    [RoutePrefix("api/sample")]
+    [RoutePrefix("sample")]
     public class SampleController : ApiController
     {
         [VersionedRoute("")]

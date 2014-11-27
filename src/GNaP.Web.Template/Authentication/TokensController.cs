@@ -3,7 +3,7 @@
     using System.Web.Http;
     using Versioning.WebAPI;
 
-    [RoutePrefix("api/tokens")]
+    [RoutePrefix("tokens")]
     public class TokensController : ApiController
     {
         /// <summary>
