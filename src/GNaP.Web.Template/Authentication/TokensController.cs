@@ -6,6 +6,12 @@
     [RoutePrefix("api/tokens")]
     public class TokensController : ApiController
     {
+        /// <summary>
+        /// Requests a new authentication token (as JWT)
+        /// </summary>
+        /// <param name="credentials">User credentials to authenticate</param>
+        /// <response code="200">JWT to use as Bearer token</response>
+        /// <response code="400">Missing or invalid credentials</response>
         [VersionedRoute("")]
         [AllowAnonymous]
         public IHttpActionResult Post(Credentials credentials)
