@@ -52,6 +52,7 @@ namespace GNaP.Web.Template.Bootstrap
             // TODO: Figure out how to get Swashbuckle respect the resolver below (https://github.com/domaindrivendev/Swashbuckle/issues/113)
             // TODO: Define a proper api path (https://github.com/domaindrivendev/Swashbuckle/issues/137)
             // TODO: Think about styling the docs page
+            // TODO: Setup authorization on docs, in case they should not be publically visible
             Swashbuckle.Bootstrapper.Init(config);
             SwaggerSpecConfig.Customize(c => c.IncludeXmlComments(String.Format(@"{0}\bin\GNaP.Web.Template.XML", AppDomain.CurrentDomain.BaseDirectory)));
             SwaggerUiConfig.Customize(c => c.DocExpansion = DocExpansion.List);
@@ -70,8 +71,10 @@ namespace GNaP.Web.Template.Bootstrap
                   .SerializerSettings
                   .ContractResolver = new CamelCasePropertyNamesContractResolver();
 
+            // Configure Web API
             builder.UseWebApi(config);
 
+            // Needed to fix some IIS issues
             builder.UseStageMarker(PipelineStage.MapHandler);
         }
     }
