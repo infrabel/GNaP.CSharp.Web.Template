@@ -1,17 +1,19 @@
-﻿using GNaP.Web.Template.Bootstrap;
-using Microsoft.Owin;
+﻿using Microsoft.Owin;
+using Template.Bootstrap;
 
 [assembly: OwinStartup(typeof(Startup), "Configuration")]
 
-namespace GNaP.Web.Template.Bootstrap
+namespace Template.Bootstrap
 {
     using System;
+    using System.Security.Claims;
     using System.Web.Http;
+    using GNaP.Owin.Authentication.Jwt;
     using Microsoft.Owin.Extensions;
+    using Owin;
     using Microsoft.Owin.Security;
     using Microsoft.Owin.Security.Jwt;
     using Newtonsoft.Json.Serialization;
-    using Owin;
     using Properties;
     using Swashbuckle.Application;
 
@@ -28,6 +30,31 @@ namespace GNaP.Web.Template.Bootstrap
             var issuer = Settings.Default.Issuer;
             var audience = Settings.Default.Audience;
             var tokenSigningKey = Settings.Default.TokenSigningKey;
+
+            builder.UseJwtTokenIssuer(
+                new JwtTokenIssuerOptions
+                {
+                    Issuer = issuer,
+                    Audience = audience,
+                    TokenSigningKey = tokenSigningKey,
+                    Authenticate = (username, password) =>
+                    {
+                        // TODO: Implement your own authentication check here
+                        if (username.Equals("gnap"))
+                        {
+                            return new[]
+                            {
+                                // TODO: Implement your own claims here
+                                new Claim(ClaimTypes.AuthenticationInstant, DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")),
+                                new Claim(ClaimTypes.AuthenticationMethod, AuthenticationTypes.Password),
+                                new Claim(ClaimTypes.Name, username)
+                            };
+                        }
+
+                        // Invalid user
+                        return null;
+                    }
+                });
 
             builder.UseJwtBearerAuthentication(
                 new JwtBearerAuthenticationOptions
@@ -54,7 +81,7 @@ namespace GNaP.Web.Template.Bootstrap
                 c.ResolveBasePathUsing(request => request.RequestUri.GetLeftPart(UriPartial.Authority).TrimEnd('/') + basePath);
 
                 // TODO: Find a better way to get to the XML documentation path
-                c.IncludeXmlComments(String.Format(@"{0}\bin\GNaP.Web.Template.xml", AppDomain.CurrentDomain.BaseDirectory));
+                c.IncludeXmlComments(String.Format(@"{0}\bin\GNaP.Template.WebApi.xml", AppDomain.CurrentDomain.BaseDirectory));
             });
             Swashbuckle.Bootstrapper.Init(config);
 

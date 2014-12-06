@@ -1,11 +1,11 @@
-﻿namespace GNaP.Web.Template.Sample
+﻿namespace Template.Example
 {
     using System.Collections.Generic;
     using System.Web.Http;
-    using Versioning.WebAPI;
+    using GNaP.WebApi.Versioning;
 
     [RoutePrefix("sample")]
-    public class SampleController : ApiController
+    public class ExampleController : ApiController
     {
         [VersionedRoute("")]
         public IHttpActionResult Get()

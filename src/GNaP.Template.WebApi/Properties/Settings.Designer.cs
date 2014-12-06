@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace GNaP.Web.Template.Properties {
+namespace Template.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
