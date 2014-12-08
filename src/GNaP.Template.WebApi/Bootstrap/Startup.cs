@@ -10,28 +10,31 @@ namespace Template.Bootstrap
     using System.Web.Http;
     using GNaP.Owin.Authentication.Jwt;
     using Microsoft.Owin.Extensions;
-    using Owin;
     using Microsoft.Owin.Security;
     using Microsoft.Owin.Security.Jwt;
     using Newtonsoft.Json.Serialization;
+    using Owin;
     using Properties;
+    using Swashbuckle;
     using Swashbuckle.Application;
 
     public class Startup
     {
-        public void Configuration(IAppBuilder builder)
+        public void Configuration(IAppBuilder app)
         {
-            ConfigureAuth(builder);
-            ConfigureWebApi(builder, basePath: "/api");
+            app.UseWelcomePage();
+
+            ConfigureAuth(app);
+            ConfigureWebApi(app, basePath: "/api");
         }
 
-        private void ConfigureAuth(IAppBuilder builder)
+        private void ConfigureAuth(IAppBuilder app)
         {
             var issuer = Settings.Default.Issuer;
             var audience = Settings.Default.Audience;
             var tokenSigningKey = Settings.Default.TokenSigningKey;
 
-            builder.UseJwtTokenIssuer(
+            app.UseJwtTokenIssuer(
                 new JwtTokenIssuerOptions
                 {
                     Issuer = issuer,
@@ -56,7 +59,7 @@ namespace Template.Bootstrap
                     }
                 });
 
-            builder.UseJwtBearerAuthentication(
+            app.UseJwtBearerAuthentication(
                 new JwtBearerAuthenticationOptions
                 {
                     AuthenticationMode = AuthenticationMode.Active,
@@ -68,7 +71,7 @@ namespace Template.Bootstrap
                 });
         }
 
-        private void ConfigureWebApi(IAppBuilder builder, string basePath)
+        private void ConfigureWebApi(IAppBuilder app, string basePath)
         {
             var config = new HttpConfiguration();
 
@@ -83,7 +86,7 @@ namespace Template.Bootstrap
                 // TODO: Find a better way to get to the XML documentation path
                 c.IncludeXmlComments(String.Format(@"{0}\bin\GNaP.Template.WebApi.xml", AppDomain.CurrentDomain.BaseDirectory));
             });
-            Swashbuckle.Bootstrapper.Init(config);
+            Bootstrapper.Init(config);
 
             // TODO: Define a proper api path (https://github.com/domaindrivendev/Swashbuckle/issues/137)
             config.Routes
@@ -108,7 +111,7 @@ namespace Template.Bootstrap
                   .SerializerSettings
                   .ContractResolver = new CamelCasePropertyNamesContractResolver();
 
-            builder.Map(basePath, inner =>
+            app.Map(basePath, inner =>
             {
                 // Configure Web API
                 inner.UseWebApi(config);
