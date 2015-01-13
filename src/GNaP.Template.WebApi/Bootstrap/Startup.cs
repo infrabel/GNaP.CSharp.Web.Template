@@ -12,6 +12,7 @@ namespace Template.Bootstrap
     using Microsoft.Owin.Extensions;
     using Microsoft.Owin.Security;
     using Microsoft.Owin.Security.Jwt;
+    using Newtonsoft.Json;
     using Newtonsoft.Json.Serialization;
     using Owin;
     using Properties;
@@ -81,11 +82,10 @@ namespace Template.Bootstrap
             //                           routeTemplate: "{controller}/{id}",
             //                           defaults: new { id = RouteParameter.Optional });
 
-            // Configure Web API return types to be properly camelCased
-            config.Formatters
-                  .JsonFormatter
-                  .SerializerSettings
-                  .ContractResolver = new CamelCasePropertyNamesContractResolver();
+            // Configure JSON.NET to properly camelCase replies and to not fail on reference loops
+            var jsonSettings = config.Formatters.JsonFormatter.SerializerSettings;
+            jsonSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            jsonSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
 
             app.Map(basePath, inner =>
             {
